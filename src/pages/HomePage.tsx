@@ -91,9 +91,7 @@ export function HomePage({ onNavigate }: { onNavigate: (v: View) => void }) {
             <h1 className="mt-5 text-[clamp(2.5rem,3.2vw_+_1rem,4rem)] font-bold leading-[1.1] tracking-tight text-ink">
               你好，我是<span className="text-brand">{SITE.name}</span>
             </h1>
-            <p className="mt-4 font-mono text-lg text-ink-soft">
-              <span className="text-ink-faint"></span> {SITE.headline}
-            </p>
+            <p className="mt-4 font-mono text-lg text-ink-soft">{SITE.headline}</p>
             {/* 正文：1.0625rem 起，随根字号放大，不再被固定 px 压回小字 */}
             <p className="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-soft">
               {SITE.intro}

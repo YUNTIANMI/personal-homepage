@@ -95,11 +95,11 @@ export function Header({
                 onClick={() => onNavigate(item.key)}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                                'focus-ring relative shrink-0 rounded-t-lg px-4 py-2.5 text-base transition-colors',
-                                active
-                                  ? 'border-b-2 border-brand font-semibold text-brand'
-                                  : 'text-ink-soft hover:text-ink',
-                              )}
+                  'focus-ring relative shrink-0 rounded-t-lg px-4 py-2.5 text-base transition-colors',
+                  active
+                    ? 'border-b-2 border-brand font-semibold text-brand'
+                    : 'text-ink-soft hover:text-ink',
+                )}
               >
                 {item.label}
               </button>

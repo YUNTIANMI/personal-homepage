@@ -67,9 +67,7 @@ export function AboutPage() {
 
         {/* 技能栈 */}
         <section className="flex flex-col rounded-2xl border border-line bg-surface p-7 sm:p-9">
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-xl font-bold text-ink">技能栈</h2>
-          </div>
+          <h2 className="text-xl font-bold text-ink">技能栈</h2>
           <div className="mt-5 flex flex-wrap gap-2">
             {SITE.tech.map((t) => (
               <Chip key={t} tone="brand">
