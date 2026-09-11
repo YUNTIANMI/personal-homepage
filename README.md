@@ -37,12 +37,12 @@ luoji-home/
 ├── tsconfig.json
 ├── package.json
 ├── .env.example                      # 环境变量模板（复制为 .env.local 使用）
-├── 文案修改指南.md                    # 站内文案的修改位置索引
 ├── .github/workflows/
 │   └── supabase-keep-alive.yml       # 每 5 天 ping 一次 Supabase，防免费项目被暂停
 ├── docs/
 │   ├── REQUIREMENTS.md               # 初始需求与设计基线
-│   └── ADMIN-PANEL-HANDOFF.md        # 后台管理系统开发交接信息
+│   ├── ADMIN-PANEL-HANDOFF.md        # 后台管理系统开发交接信息
+│   └── 文案修改指南.md                # 站内文案的修改位置索引
 └── src/
     ├── main.tsx                      # 应用入口（StoreProvider + ToastProvider）
     ├── App.tsx                       # 布局（Header / Main / Footer）与视图切换、主题切换
@@ -209,7 +209,7 @@ npm run build
 | --- | --- |
 | [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) | 初始需求与设计基线 |
 | [`docs/ADMIN-PANEL-HANDOFF.md`](docs/ADMIN-PANEL-HANDOFF.md) | 后台管理系统的开发交接信息（数据模型 / Supabase / 可复用组件 / 设计系统） |
-| [`文案修改指南.md`](文案修改指南.md) | 站内各处文案的修改位置索引 |
+| [`docs/文案修改指南.md`](docs/文案修改指南.md) | 站内各处文案的修改位置索引 |
 | `luoji-admin` | 后台管理系统，**独立仓库**，由本项目复制后开发，与本项目共用同一 Supabase 数据库 |
 
 ## License
