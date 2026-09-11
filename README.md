@@ -1,16 +1,17 @@
 # 罗辑个人主页（luoji-home）
 
-软件工程方向个人博客与作品集，基于 **React 18 + Vite 6 + TypeScript + Tailwind CSS v4** 的纯前端单页应用。
+软件工程方向个人博客与作品集 —— 基于 **React 18 + Vite 6 + TypeScript + Tailwind CSS v4** 的纯前端单页应用。
 
-站点以「个人数字名片」为定位：用一段简洁的 Hero 介绍自己，用文章沉淀技术笔记，用项目卡片展示软件作品，并支持明 / 暗主题与全站响应式布局。
+站点以「个人数字名片」为定位：用一段 Hero 介绍自己，用文章沉淀技术笔记，用项目卡片展示软件作品，并支持明 / 暗主题与全站响应式布局。
+数据默认保存在浏览器本地，配置 Supabase 后自动切换为**云端存储**（换电脑 / 换浏览器数据通用）。
 
 ## 功能特性
 
-- **首页**：一句话自我介绍（Hero）+ 数据驱动的站点概览（文章数 / 项目数），大屏自动双栏布局
+- **首页**：Hero 自我介绍 + 数据驱动的站点概览（文章数 / 项目数），大屏自动双栏布局
 - **博客**：文章列表管理，支持 **新增 / 编辑 / 删除 / 批量删除**、**即时搜索**（标题 / 摘要 / 标签 / 正文）
 - **阅读器**：Markdown 全文渲染，支持 GFM（表格、任务列表、删除线）、**代码块语法高亮**、阅读时长估算，明暗主题自适应
-- **项目**：项目卡片网格，支持为每个项目添加多条外链（GitHub / Demo 等，`target="_blank"` + `rel="noopener"`），可增删改
-- **关于**：个人名片（自我介绍、技能栈、联系方式），信息来自站点配置文件
+- **项目**：项目卡片网格，可为每个项目添加多条外链（GitHub / Demo 等，`target="_blank"` + `rel="noopener"`），可增删改
+- **关于**：个人名片（自我介绍、技能栈、联系方式），邮箱支持**一键复制**
 - **主题**：浅色为基调、支持深色，跟随系统并可手动切换（记忆在 `localStorage`）
 - **响应式**：桌面（1366 / 1440 / 1920 / 2560+）流体布局，平板 / 手机自动回退单列，无横向滚动
 - **视觉**：克制的中性配色 + 单一强调色，lucide 线性图标（无 emoji 冒充图标），极淡网格装饰
@@ -19,105 +20,94 @@
 
 | 分类 | 选型 |
 | --- | --- |
-| 框架 | React 18 · TypeScript |
+| 框架 | React 18 · TypeScript 5 |
 | 构建 | Vite 6（`@vitejs/plugin-react`） |
 | 样式 | Tailwind CSS v4（`@tailwindcss/vite`）+ 设计 Token（CSS 变量驱动主题） |
+| 数据 | Supabase（可选）+ localStorage 离线缓存 |
 | Markdown | `react-markdown` + `remark-gfm` + `rehype-highlight` |
 | 图标 | `lucide-react` |
-| 状态 | React Hooks（`useReducer` + Context）+ localStorage 本地持久化 |
+| 状态 | React Hooks（`useReducer` + Context）；无状态库、无路由库 |
 
 ## 目录结构
 
 ```
 luoji-home/
-├── index.html               # HTML 入口（含主题初始化脚本）
-├── vite.config.ts           # Vite + Tailwind 配置
+├── index.html                        # HTML 入口（含主题防闪烁初始化脚本）
+├── vite.config.ts                    # Vite + Tailwind 配置（dev 端口 5173）
 ├── tsconfig.json
-├── src/
-│   ├── main.tsx             # 应用入口
-│   ├── App.tsx              # 布局（Header / Main / Footer）与页面路由
-│   ├── styles.css           # 设计 Token、主题、Markdown 排版、语法高亮
-│   ├── types.ts             # 领域类型（Post / Project / View）
-│   ├── store.tsx            # 数据仓库（localStorage 持久化 + 文章 / 项目 增删改查）
-│   ├── toast.tsx            # 轻提示
-│   ├── utils.ts             # 日期格式化 / 阅读时长等工具
-│   ├── lib/
-│   │   ├── site.ts          # ★ 站点个人资料配置
-│   │   └── markdown.tsx     # Markdown 渲染管线
-│   ├── components/
-│   │   ├── Header.tsx       # 顶部导航 + 底部 Footer
-│   │   ├── ui.tsx           # Button / Input / Chip / PageHead 等基础组件
-│   │   ├── Dialog.tsx       # 通用弹窗
-│   │   ├── TagInput.tsx     # 标签输入
-│   │   └── ...
-│   └── pages/               # HomePage / BlogPage / PostReader / ProjectsPage / AboutPage / 表单弹窗
-└── docs/
-    └── REQUIREMENTS.md      # 开发需求文档（设计基线）
+├── package.json
+├── .env.example                      # 环境变量模板（复制为 .env.local 使用）
+├── 文案修改指南.md                    # 站内文案的修改位置索引
+├── .github/workflows/
+│   └── supabase-keep-alive.yml       # 每 5 天 ping 一次 Supabase，防免费项目被暂停
+├── docs/
+│   ├── REQUIREMENTS.md               # 初始需求与设计基线
+│   └── ADMIN-PANEL-HANDOFF.md        # 后台管理系统开发交接信息
+└── src/
+    ├── main.tsx                      # 应用入口（StoreProvider + ToastProvider）
+    ├── App.tsx                       # 布局（Header / Main / Footer）与视图切换、主题切换
+    ├── styles.css                    # 设计 Token、根字号阶梯、Markdown 排版、语法高亮
+    ├── types.ts                      # 领域类型（Post / Project / ProjectLink / View）
+    ├── store.tsx                     # 数据仓库（内存状态 + 云端同步 + localStorage 缓存）
+    ├── toast.tsx                     # 轻提示（useToast）
+    ├── utils.ts                      # uid / todayISO / fmtDate / isValidHttpUrl / readingMinutes
+    ├── vite-env.d.ts                 # Vite 环境变量类型声明
+    ├── lib/
+    │   ├── site.ts                   # ★ 站点个人资料配置
+    │   ├── cloud.ts                   # Supabase 数据访问层（未配置时自动降级为本地模式）
+    │   └── markdown.tsx              # Markdown 渲染管线
+    ├── components/
+    │   ├── Header.tsx                # 顶部导航 + 底部 Footer（含云端同步状态）
+    │   ├── ui.tsx                    # Button / Input / Chip / Field / EmptyState / PageHead 等
+    │   ├── Dialog.tsx                # 通用弹窗 + 危险操作确认框
+    │   ├── TagInput.tsx              # 标签输入
+    │   ├── LinkRowsEditor.tsx        # 项目外链多行编辑器
+    │   └── icons.tsx                 # 品牌图标（GitHub mark、站点 Logo）
+    └── pages/
+        ├── HomePage.tsx              # 首页（Hero + 站点数据）
+        ├── BlogPage.tsx              # 文章列表
+        ├── PostReader.tsx            # Markdown 阅读页
+        ├── ProjectsPage.tsx          # 项目网格
+        ├── AboutPage.tsx             # 关于
+        ├── PostFormDialog.tsx        # 文章新增 / 编辑表单
+        └── ProjectFormDialog.tsx     # 项目新增 / 编辑表单
 ```
 
 ## 快速开始
 
-### 环境要求
-
-- Node.js ≥ 18
-- npm（或 pnpm / yarn）
-
-### 安装与运行
+环境要求：Node.js ≥ 18、npm（或 pnpm / yarn）。
 
 ```bash
-# 1. 安装依赖
-npm install
-
-# 2. 启动开发服务器（默认 http://localhost:5173）
-npm run dev
+npm install       # 安装依赖
+npm run dev       # 开发服务器 → http://localhost:5173（HMR）
 ```
-
-打开终端提示的地址即可访问。修改 `src/` 下代码会热更新，无需手动刷新。
-
-### 构建与预览
-
-```bash
-# 生产构建（先做 TS 类型检查再打包，产物输出到 dist/）
-npm run build
-
-# 本地预览构建产物（默认 http://localhost:4173）
-npm run preview
-
-# 仅做 TypeScript 类型检查
-npm run typecheck
-```
-
-### 常用脚本
 
 | 命令 | 说明 |
 | --- | --- |
 | `npm run dev` | 启动开发服务器（HMR） |
-| `npm run build` | 类型检查 + 生产构建 |
-| `npm run preview` | 预览构建产物 |
-| `npm run typecheck` | TypeScript 类型检查 |
+| `npm run build` | 类型检查 + 生产构建（输出 `dist/`） |
+| `npm run preview` | 本地预览构建产物 → http://localhost:4173 |
+| `npm run typecheck` | 仅做 TypeScript 类型检查 |
 
-## 数据如何管理
+## 数据存储
 
-文章与项目保存在浏览器 **localStorage**（键名 `luoji.store.v1`）中，**新增 / 编辑 / 删除后刷新或关闭浏览器都不会丢失**。
+两种模式，由是否配置环境变量自动决定，**界面无需任何改动**：
 
-- **首次访问**：本地无数据时载入 1 条内置示例文章（标注「示例 · 可删除」），删除后**不会再自动出现**
-- **新增文章**：进入「博客」页 → 右上角「新增文章」→ 填写标题 / 分类 / 标签 / 摘要 / Markdown 正文 → 发布
-- **编辑 / 删除**：文章行内操作图标，支持单篇删除与复选框批量删除
-- **新增项目**：进入「项目」页 → 「新增项目」→ 填写名称 / 简介 / 技术标签，并至少添加一条外链（如 GitHub）
-- **个人资料**：站点名称、一句话介绍、GitHub / 邮箱、技能栈在 `src/lib/site.ts` 中配置
+| 模式 | 触发条件 | 行为 |
+| --- | --- | --- |
+| **本地模式** | 未配置 Supabase | 数据存 `localStorage`（键 `luoji.store.v1`），仅当前浏览器有效；首次访问载入 1 条内置示例文章 |
+| **云端模式** | 已配置 Supabase | 云数据库为权威数据源，`localStorage` 仅作离线缓存；页脚显示「云端同步正常 / 同步中 / 同步失败」 |
 
-> 数据存储机制：`src/store.tsx` + `src/lib/cloud.ts`
-> - **未配置云端** → 本地模式：数据存 localStorage（键 `luoji.store.v1`），仅当前浏览器有效
-> - **配置了云端** → 云端模式：云数据库为权威数据源，localStorage 仅作离线缓存
->
-> 想恢复出厂示例数据（本地模式）：DevTools → Application → Local Storage → 删除 `luoji.store.v1`，刷新即可。
+云端模式的细节：
 
-## 云端存储（换电脑也能看到数据）
+- 启动时从云端拉取，以云端数据为准；**首次启用**且云端为空时，会自动把本地已有数据迁移上传，避免丢失；
+- 新增 / 编辑 / 删除先在本地即时生效（乐观更新），再异步写入云端；写入失败时回退本地缓存并在页脚提示；
+- 云端不可用不影响站点可用性。
 
-默认走浏览器本地存储，**换电脑 / 换浏览器数据不通用**。接入 **Supabase**（免费）后即切换为云端存储（纯前端直连，无需自建后端）：
+### 接入 Supabase（免费）
 
-1. 注册 [supabase.com](https://supabase.com)，**New project** 新建项目（免费版；区域选离你较近的，如 Singapore）
-2. 打开 **SQL Editor**，粘贴执行下面这段 SQL（建两张表 + 开放匿名读写权限）：
+1. 注册 [supabase.com](https://supabase.com) → **New project** 新建项目（区域选离你较近的，如 Singapore）
+2. 打开 **SQL Editor**，执行下面这段 SQL（建两张表 + 开放匿名读写）：
 
 ```sql
 -- 文章表
@@ -142,7 +132,7 @@ create table if not exists public.projects (
   "isSample" boolean not null default false
 );
 
--- 开启行级安全（RLS）并允许匿名读写（个人站点可用；多人/生产环境请收紧）
+-- 开启行级安全（RLS）并允许匿名读写（个人站点可用；多人 / 生产环境请收紧）
 alter table public.posts enable row level security;
 alter table public.projects enable row level security;
 
@@ -153,48 +143,74 @@ create policy "projects anon all" on public.projects
 ```
 
 3. 打开 **Project Settings → API**，复制 **Project URL** 与 **anon public key**
-4. 复制 `.env.example` 为 `.env.local`，填入这两项，重启 `npm run dev`
-5. 页脚显示「云端同步正常」即接入成功；**首次启用会自动把当前浏览器里已有的文章 / 项目迁移到云端**
+4. 复制 `.env.example` 为 `.env.local`，填入这两项，重启 `npm run dev`：
 
-> 换电脑时填同一组 URL + Key 即可看到同一份数据；云端不可用时会自动回退本地缓存，并在页脚提示「云端同步失败」。
->
-> **免费版保活**：Supabase 免费项目 7 天无请求会被暂停，仓库已内置 [`.github/workflows/supabase-keep-alive.yml`](.github/workflows/supabase-keep-alive.yml)，每 5 天自动请求一次。启用前需在 GitHub 仓库 → Settings → Secrets and variables → Actions 添加 `SUPABASE_URL` 与 `SUPABASE_ANON_KEY` 两个 Secret。
+```dotenv
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon / publishable key>
+```
+
+> ⚠️ `VITE_SUPABASE_URL` 必须是 **base 地址**：不要带 `/rest/v1/`、不要有结尾斜杠（`supabase-js` 会自行拼接路径）。
+> `.env.local` 已被 `.gitignore` 忽略，**切勿提交到仓库**。
+
+5. 页脚显示「云端同步正常」即接入成功。
+
+> **免费版保活**：Supabase 免费项目 7 天无请求会被暂停。仓库已内置
+> [`.github/workflows/supabase-keep-alive.yml`](.github/workflows/supabase-keep-alive.yml) 每 5 天自动请求一次。
+> 启用前需在 GitHub 仓库 → Settings → Secrets and variables → Actions 添加 `SUPABASE_URL` 与 `SUPABASE_ANON_KEY` 两个 Secret。
+
+> 想恢复出厂示例数据（本地模式）：DevTools → Application → Local Storage → 删除 `luoji.store.v1` 后刷新。
 
 ## 个性化配置
 
-编辑 `src/lib/site.ts` 替换为真实信息：
+编辑 `src/lib/site.ts` 替换为你的真实信息：
 
 ```ts
 export const SITE = {
-  name: '罗辑',           // 显示名称
-  en: 'LUOJI',            // 英文标识
+  name: '罗辑',                        // 显示名称
+  en: 'LUOJI',                         // 英文标识
   role: 'Software Engineer · 软件工程',
   headline: '写代码，也写文章。',
   intro: '一句话介绍……',
-  github: 'https://github.com/…',   // 留空则不展示 GitHub 图标
-  email: 'you@example.com',         // 留空则不展示邮箱入口
-  tech: ['TypeScript', 'React', '…'], // 关于页技能栈
-  startYear: 2026,
+  github: 'https://github.com/…',       // 留空则不展示 GitHub 入口
+  email: 'you@example.com',             // 留空则不展示邮箱入口
+  tech: ['TypeScript', 'React', '…'],   // 关于页技能栈
+  startYear: 2026,                      // 页脚版权起始年份
 }
 ```
 
+文章与项目数据不在这里配置 —— 它们在站点内直接新增 / 编辑（见「数据存储」）。
+
 ## 部署
 
-纯静态站点，构建产物为 `dist/`，可部署到任意静态托管：
+纯静态站点，构建产物为 `dist/`：
 
 ```bash
 npm run build
 ```
 
-- **Vercel / Netlify / CloudBase**：导入仓库，构建命令 `npm run build`，输出目录 `dist`
-- **GitHub Pages**：若部署到 `https://<user>.github.io/<repo>/` 子路径，需在 `vite.config.ts` 设置 `base: '/<repo>/'` 后重新构建
+- **Vercel / Netlify / Cloudflare Pages / CloudBase**：导入仓库，构建命令 `npm run build`，输出目录 `dist`；
+  ⚠️ 需在平台的环境变量设置里配置 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY`（否则线上会是本地模式）
+- **GitHub Pages**：若部署在 `https://<user>.github.io/<repo>/` 子路径，需先在 `vite.config.ts` 中设置 `base: '/<repo>/'` 再构建
 - 本地验证部署结果：`npm run preview`
 
 ## 设计说明
 
-- 主题 Token 集中在 `src/styles.css`：`--canvas` / `--surface` / `--line` / `--ink` / `--brand` 等，`.dark` 下覆盖为深色值，`@theme inline` 映射为 Tailwind 颜色（`bg-canvas`、`text-ink`、`border-line` 等）
-- 桌面端采用「根字号随视口阶梯放大」的排版系统，保证 1366 → 2560 各档下字号与间距的可读性
-- 需求与设计基线见 [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md)
+- **设计 Token** 集中在 `src/styles.css`：`--canvas` / `--surface` / `--line` / `--ink` / `--brand` 等，
+  `.dark` 下覆盖为深色值，`@theme inline` 映射为 Tailwind 颜色（`bg-canvas`、`text-ink`、`border-line` 等）
+- **根字号阶梯**：`rem` 基准随视口放大（≥1024px 起 17px → ≥1366px 19px → ≥1536px 21px → ≥1920px 24px → ≥2560px 28px），
+  所有字号与间距使用 rem 单位，保证大屏下的可读密度
+- **响应式**：页面级容器流体铺满（`w-full` + 分级 `px`），仅在真正需要限宽的正文区保留 `max-w-*`
+- **字重**：正文 500（不使用细体），标题 700，保证层级对比
+
+## 相关项目与文档
+
+| 名称 | 说明 |
+| --- | --- |
+| [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) | 初始需求与设计基线 |
+| [`docs/ADMIN-PANEL-HANDOFF.md`](docs/ADMIN-PANEL-HANDOFF.md) | 后台管理系统的开发交接信息（数据模型 / Supabase / 可复用组件 / 设计系统） |
+| [`文案修改指南.md`](文案修改指南.md) | 站内各处文案的修改位置索引 |
+| `luoji-admin` | 后台管理系统，**独立仓库**，由本项目复制后开发，与本项目共用同一 Supabase 数据库 |
 
 ## License
 
