@@ -37,6 +37,8 @@ luoji-home/
 ├── tsconfig.json
 ├── package.json
 ├── .env.example                      # 环境变量模板（复制为 .env.local 使用）
+├── .nvmrc                            # Node 版本声明（供云端构建环境使用）
+├── wrangler.toml                     # Cloudflare Workers 部署配置（发布 dist/ 到线上）
 ├── .github/workflows/
 │   └── supabase-keep-alive.yml       # 每 5 天 ping 一次 Supabase，防免费项目被暂停
 ├── docs/
@@ -196,15 +198,25 @@ npm run build
 | 平台 | Cloudflare Workers（仅静态资源） |
 | Worker 名称 | `personal-homepage` |
 | 线上地址 | `https://personal-homepage.1431634649.workers.dev` |
-| 部署方式 | 本地 `npm run build` 后，在 Cloudflare 控制台手动上传 `dist/`（仓库内无 wrangler 配置） |
+| 部署方式 | 本地 `npm run build` + `npx wrangler deploy`（配置见仓库内 `wrangler.toml`）；首次需 `npx wrangler login` 授权一次 |
 | 环境变量 | **无需在平台配置**：构建在本地完成，Supabase 配置从本地 `.env.local` 内嵌进产物 |
 
 > ⚠️ **国内访问限制**：`*.workers.dev` 与 `*.pages.dev` 域名在国内被 **DNS 污染 + IP 阻断**
 > （实测解析到 Twitter / Facebook 的 IP 段，改用 Cloudflare 真实 IP 直连同样超时），**必须挂代理才能打开**。
 > 若需国内免代理访问，应改用国内节点的静态托管（如腾讯云 EdgeOne Pages / CloudBase），或绑定自有域名。
 
-> 🔧 **手动上传方式的局限**：每次改动都要重新 `npm run build` 再上传。如需自动化，可改用 Git 集成（推送即部署），
-> 或在仓库内添加 `wrangler.toml` 后用 `npx wrangler deploy` 更新同一个 Worker。
+> 🔄 **更新线上版本**：仓库内已配置 `wrangler.toml`，改完代码执行两条命令即可发布（更新的是同一个 Worker）：
+>
+> ```bash
+> npm run build
+> npx wrangler deploy
+> ```
+>
+> **首次使用需先授权**：执行 `npx wrangler login`，浏览器会自动打开 Cloudflare 授权页，登录后点「Allow」即可
+> （凭据保存在 `%APPDATA%\xdg.config\.wrangler\config\default.toml`，之后无需重复授权）。
+>
+> **为什么本地构建**：Supabase 配置来自本地 `.env.local` 并内嵌进构建产物，因此 Cloudflare 侧无需配置任何环境变量。
+> 若改用 Git 集成（推送即自动构建部署），则必须在 Cloudflare 控制台补上 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY`。
 
 ### 部署到其他平台
 

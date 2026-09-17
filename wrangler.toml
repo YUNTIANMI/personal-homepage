@@ -1,0 +1,15 @@
+# Cloudflare Workers 部署配置（静态资源站点）
+#
+# 用途：把构建产物 dist/ 发布到 Cloudflare Workers，更新线上站点。
+# 命令：npm run build && npx wrangler deploy
+#
+# 说明：
+# - name 必须与 Cloudflare 控制台上已有的 Worker 名称一致，否则会新建一个 Worker；
+# - 本地构建时 Supabase 配置（VITE_*）来自 .env.local 并已内嵌进 dist/，因此这里无需声明环境变量。
+
+name = "personal-homepage"
+compatibility_date = "2026-09-17"
+
+# 纯静态资源：直接发布 dist 目录，不运行 Worker 脚本
+[assets]
+directory = "./dist"
