@@ -189,6 +189,25 @@ export const SITE = {
 npm run build
 ```
 
+### 当前线上部署状态（Cloudflare Workers）
+
+| 项 | 值 |
+| --- | --- |
+| 平台 | Cloudflare Workers（仅静态资源） |
+| Worker 名称 | `personal-homepage` |
+| 线上地址 | `https://personal-homepage.1431634649.workers.dev` |
+| 部署方式 | 本地 `npm run build` 后，在 Cloudflare 控制台手动上传 `dist/`（仓库内无 wrangler 配置） |
+| 环境变量 | **无需在平台配置**：构建在本地完成，Supabase 配置从本地 `.env.local` 内嵌进产物 |
+
+> ⚠️ **国内访问限制**：`*.workers.dev` 与 `*.pages.dev` 域名在国内被 **DNS 污染 + IP 阻断**
+> （实测解析到 Twitter / Facebook 的 IP 段，改用 Cloudflare 真实 IP 直连同样超时），**必须挂代理才能打开**。
+> 若需国内免代理访问，应改用国内节点的静态托管（如腾讯云 EdgeOne Pages / CloudBase），或绑定自有域名。
+
+> 🔧 **手动上传方式的局限**：每次改动都要重新 `npm run build` 再上传。如需自动化，可改用 Git 集成（推送即部署），
+> 或在仓库内添加 `wrangler.toml` 后用 `npx wrangler deploy` 更新同一个 Worker。
+
+### 部署到其他平台
+
 - **Vercel / Netlify / Cloudflare Pages / CloudBase**：导入仓库，构建命令 `npm run build`，输出目录 `dist`；
   ⚠️ 需在平台的环境变量设置里配置 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY`（否则线上会是本地模式）
 - **GitHub Pages**：若部署在 `https://<user>.github.io/<repo>/` 子路径，需先在 `vite.config.ts` 中设置 `base: '/<repo>/'` 再构建
