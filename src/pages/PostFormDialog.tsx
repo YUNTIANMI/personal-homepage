@@ -9,7 +9,7 @@ import { useStore } from '../store'
 import { useToast } from '../toast'
 import { todayISO, uid } from '../utils'
 
-export interface PostDraft {
+interface PostDraft {
   title: string
   date: string
   category: string

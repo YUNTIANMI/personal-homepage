@@ -21,12 +21,12 @@ export const COLLECTIONS = {
   projects: 'projects',
 } as const
 
-export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS]
+type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS]
 
 let client: SupabaseClient | null = null
 
 /** 获取 Supabase 客户端（单例） */
-export function getClient(): SupabaseClient {
+function getClient(): SupabaseClient {
   if (!cloudEnabled) {
     throw new Error('未配置 VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY，云端存储未启用')
   }

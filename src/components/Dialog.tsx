@@ -11,7 +11,6 @@ export function Dialog({
   subtitle,
   size = 'lg',
   children,
-  ariaLabel,
 }: {
   open: boolean
   onClose: () => void
@@ -19,7 +18,6 @@ export function Dialog({
   subtitle?: ReactNode
   size?: 'md' | 'lg' | 'xl'
   children: ReactNode
-  ariaLabel?: string
 }) {
   /** 内容滚动区：打开时复位到顶部，避免自动聚焦把内容推出视口 */
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -54,7 +52,7 @@ export function Dialog({
       className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-8"
       role="dialog"
       aria-modal="true"
-      aria-label={ariaLabel || (typeof title === 'string' ? title : '对话框')}
+      aria-label={typeof title === 'string' ? title : '对话框'}
     >
       <div
         className="fixed inset-0 bg-[#0a0f16]/45 backdrop-blur-[2px]"

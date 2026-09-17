@@ -29,7 +29,7 @@ const sizeCls: Record<BtnSize, string> = {
   md: 'h-12 gap-2 px-6 text-[0.9375rem]',
 }
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: BtnVariant
   size?: BtnSize
 }
@@ -131,12 +131,10 @@ export function Chip({
   children,
   tone = 'neutral',
   onRemove,
-  title,
 }: {
   children: ReactNode
   tone?: 'neutral' | 'brand' | 'ok' | 'warn'
   onRemove?: () => void
-  title?: string
 }) {
   const toneCls: Record<string, string> = {
     neutral:
@@ -147,7 +145,6 @@ export function Chip({
   }
   return (
     <span
-      title={title}
       className={cn(
         'inline-flex max-w-full items-center gap-1 rounded-md border px-2.5 py-1 font-mono text-xs leading-5',
         toneCls[tone],
